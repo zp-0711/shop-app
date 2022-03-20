@@ -5,9 +5,12 @@ import router from '@/router';
 //三级联动组件---全局组件
 import TypeNav from '@/components/TypeNav';
 //第一个参数：全局组件的名字  第二个参数：哪一个组件
-import Carsousel from '@/components/Carousel'
+import Carsousel from '@/components/Carousel';
+import Pagination from '@/components/Pagination';
+
 Vue.component(TypeNav.name, TypeNav)
 Vue.component(Carsousel.name, Carsousel)
+Vue.component(Pagination.name,Pagination)
 Vue.config.productionTip = false;
 import store from './store';
 import '@/mock/mockServe';

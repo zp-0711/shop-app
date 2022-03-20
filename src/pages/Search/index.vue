@@ -118,35 +118,7 @@
             </ul>
           </div>
           <!-- 分页器 -->
-          <div class="fr page">
-            <div class="sui-pagination clearfix">
-              <ul>
-                <li class="prev disabled">
-                  <a href="#">«上一页</a>
-                </li>
-                <li class="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">5</a>
-                </li>
-                <li class="dotted"><span>...</span></li>
-                <li class="next">
-                  <a href="#">下一页»</a>
-                </li>
-              </ul>
-              <div><span>共10页&nbsp;</span></div>
-            </div>
-          </div>
+         <Pagination />
         </div>
       </div>
     </div>
@@ -176,7 +148,7 @@ export default {
         // 关键字
         keyword: "",
         // 排序：初始的状态应该是综合降序
-        order: "2:desc",
+        order: "1:desc",
         // 分页器使用：当前页码
         pageNo: 1,
         // 每一页显示数据的个数
@@ -191,14 +163,12 @@ export default {
   // 组件挂载完毕之前执行一次
   beforeMount() {
     // 简单的写法
-    //
     Object.assign(this.searchParams, this.$route.query, this.$route.params);
   },
   mounted() {
     // 在发请求之前带给服务其参数【searchParams参数发生变化有数值带给服务器】
     this.getData();
   },
-
   computed: {
     ...mapState({
       // goodList:state=>state.search
@@ -289,8 +259,21 @@ export default {
     changeOrder(flag) {
       // flag形参:他是一个标记,代表用户点击的是综合1还是价格2[用户点击的时候传递进来的]
       let originOrder = this.searchParams.order;
-      let originFlag = this.searchParams.order.split(":")[0];
-      let originSort = this.searchParams.order.split(":")[1];
+      let originFlag = originOrder.split(":")[0];
+      let originSort = originOrder.split(":")[1];
+      //准备一个新的order属性
+      let newOrder = "";
+      // 这个语句我能点击的一定是综合
+      if (flag==originFlag){
+        newOrder = `${originFlag}:${originSort=="desc"?"asc":"desc"}`;
+      }else{
+        //点击的是价格
+        newOrder=`${flag}:${'desc'}`;
+      }
+      // 将新的order赋予searchparams
+      this.searchParams.order=newOrder;
+      // 再次发送请求
+      this.getData()
     },
   },
 
