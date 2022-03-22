@@ -152,7 +152,7 @@ export default {
         // 分页器使用：当前页码
         pageNo: 1,
         // 每一页显示数据的个数
-        pageSize: 3,
+        pageSize: 5,
         // 平台售卖属性操作带的数据
         props: [],
         // 品牌
