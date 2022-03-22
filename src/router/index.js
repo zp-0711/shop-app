@@ -8,6 +8,7 @@ import Home from '@/pages/Home'
 import Login from '@/pages/Login'
 import Register from '@/pages/Register'
 import Search from '@/pages/Search'
+import Detail from '@/pages/Detail'
 //先把VueRouter原型对象的push保存一份
 let originPush = VueRouter.prototype.push;
 let originReplace = VueRouter.prototype.replace;
@@ -37,7 +38,17 @@ VueRouter.prototype.replace = function (location, resolve, reject) {
 //配置路由
 export default new VueRouter({
     //配置路由
-    routes: [{
+    routes: [
+
+        {
+            path: "/detail",
+            component: Detail,
+            meta: {
+                show: true
+            },
+        },
+
+        {
             path: "/home",
             component: Home,
             meta: {

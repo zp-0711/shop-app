@@ -118,7 +118,7 @@
             </ul>
           </div>
           <!-- 分页器 -->
-         <Pagination />
+          <Pagination :pageNo="searchParams.pageNo" :pageSize="searchParams.pageSize" :total="total" :continues="5" @getPageNo="getPageNo" />
         </div>
       </div>
     </div>
@@ -150,7 +150,7 @@ export default {
         // 排序：初始的状态应该是综合降序
         order: "1:desc",
         // 分页器使用：当前页码
-        pageNo: 1,
+        pageNo: 3,
         // 每一页显示数据的个数
         pageSize: 3,
         // 平台售卖属性操作带的数据
@@ -172,6 +172,7 @@ export default {
   computed: {
     ...mapState({
       // goodList:state=>state.search
+      total:state=>state.search.searchList.total,
     }),
     //
     ...mapGetters(["goodsList"]),
@@ -264,17 +265,23 @@ export default {
       //准备一个新的order属性
       let newOrder = "";
       // 这个语句我能点击的一定是综合
-      if (flag==originFlag){
-        newOrder = `${originFlag}:${originSort=="desc"?"asc":"desc"}`;
-      }else{
+      if (flag == originFlag) {
+        newOrder = `${originFlag}:${originSort == "desc" ? "asc" : "desc"}`;
+      } else {
         //点击的是价格
-        newOrder=`${flag}:${'desc'}`;
+        newOrder = `${flag}:${"desc"}`;
       }
       // 将新的order赋予searchparams
-      this.searchParams.order=newOrder;
+      this.searchParams.order = newOrder;
       // 再次发送请求
-      this.getData()
+      this.getData();
     },
+    getPageNo(pageNo){
+      // console.log(pageNo);
+      this.searchParams.pageNo = pageNo;
+      // 再次发请求
+      this.getData();
+    }
   },
 
   // watch是监听数据：监听组件实例身上的属性的属性值的变化
