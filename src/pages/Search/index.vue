@@ -81,9 +81,9 @@
               >
                 <div class="list-wrap">
                   <div class="p-img">
-                    <a href="item.html" target="_blank"
-                      ><img :src="good.defaultImg"
-                    /></a>
+                    <!--  -->
+                    <router-link :to="`/detail/${good.id}`"><img :src="good.defaultImg"
+                    /></router-link>
                   </div>
                   <div class="price">
                     <strong>
@@ -150,7 +150,7 @@ export default {
         // 排序：初始的状态应该是综合降序
         order: "1:desc",
         // 分页器使用：当前页码
-        pageNo: 3,
+        pageNo: 1,
         // 每一页显示数据的个数
         pageSize: 3,
         // 平台售卖属性操作带的数据
