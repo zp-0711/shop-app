@@ -22,18 +22,18 @@
         <!-- 左侧放大镜区域 -->
         <div class="previewWrap">
           <!--放大镜效果-->
-          <Zoom :skuImageList="skuImageList"/>
+          <Zoom :skuImageList="skuImageList" />
           <!-- 小图列表 -->
-          <ImageList />
+          <ImageList :skuImageList="skuImageList" />
         </div>
         <!-- 右侧选择区域布局 -->
         <div class="InfoWrap">
           <div class="goodsDetail">
             <h3 class="InfoName">
-              {{skuInfo.skuName}}
+              {{ skuInfo.skuName }}
             </h3>
             <p class="news">
-              {{skuInfo.skuDesc}}
+              {{ skuInfo.skuDesc }}
             </p>
             <div class="priceArea">
               <div class="priceArea1">
@@ -42,7 +42,7 @@
                 </div>
                 <div class="price">
                   <i>¥</i>
-                  <em>{{skuInfo.price}}</em>
+                  <em>{{ skuInfo.price }}</em>
                   <span>降价通知</span>
                 </div>
                 <div class="remark">
@@ -81,39 +81,51 @@
           <div class="choose">
             <div class="chooseArea">
               <div class="choosed"></div>
-              <dl>
-                <dt class="title">选择颜色</dt>
-                <dd changepirce="0" class="active">金色</dd>
-                <dd changepirce="40">银色</dd>
-                <dd changepirce="90">黑色</dd>
-              </dl>
-              <dl>
-                <dt class="title">内存容量</dt>
-                <dd changepirce="0" class="active">16G</dd>
-                <dd changepirce="300">64G</dd>
-                <dd changepirce="900">128G</dd>
-                <dd changepirce="1300">256G</dd>
-              </dl>
-              <dl>
-                <dt class="title">选择版本</dt>
-                <dd changepirce="0" class="active">公开版</dd>
-                <dd changepirce="-1000">移动版</dd>
-              </dl>
-              <dl>
-                <dt class="title">购买方式</dt>
-                <dd changepirce="0" class="active">官方标配</dd>
-                <dd changepirce="-240">优惠移动版</dd>
-                <dd changepirce="-390">电信优惠版</dd>
+              <dl
+                v-for="(spuSaleAttr, index) in spuSaleAttrList"
+                :key="spuSaleAttr.id"
+              >
+                <dt class="title">{{ spuSaleAttr.SaleAttrName }}</dt>
+                <dd
+                  changepirce="0"
+                  :class="{ active: spuSaleAttrValue.isChecked == 1 }"
+                  v-for="(
+                    spuSaleAttrValue, index
+                  ) in spuSaleAttr.spuSaleAttrValueList"
+                  :key="spuSaleAttrValue.id"
+                  @click="
+                    changeActive(
+                      spuSaleAttrValue,
+                      spuSaleAttr.spuSaleAttrValueList
+                    )
+                  "
+                >
+                  {{ spuSaleAttrValue.saleAttrValueName }}
+                </dd>
               </dl>
             </div>
             <div class="cartWrap">
               <div class="controls">
-                <input autocomplete="off" class="itxt" />
-                <a href="javascript:" class="plus">+</a>
-                <a href="javascript:" class="mins">-</a>
+                <input
+                  autocomplete="off"
+                  class="itxt"
+                  v-model="skuNum"
+                  @click="changeSkuNum"
+                  @mouseleave="changeSkuNum"
+                />
+                <a href="javascript:" class="plus" @click="skuNum++">+</a>
+                <a
+                  href="javascript:"
+                  class="mins"
+                  @click="skuNum > 1 ? skuNum-- : (skuNum = 1)"
+                  >-</a
+                >
               </div>
               <div class="add">
-                <a href="javascript:">加入购物车</a>
+                <!-- 以前的路由的跳转就是正常的从a路由跳转到b路由，这里在加入购物车，进行路由跳转之前，
+                发请求把你购买的产品的信息通过请求的形式通知服务器，服务器进行相应的存储
+                 -->
+                <a @click="addShopcar">加入购物车</a>
               </div>
             </div>
           </div>
@@ -357,15 +369,48 @@ import Zoom from "./Zoom/Zoom";
 import { mapGetters } from "vuex";
 export default {
   name: "Detail",
+  data() {
+    return { skuNum: 1 };
+  },
   components: {
     ImageList,
     Zoom,
   },
+  methods: {
+    // 切换标签，点击的标签变高亮
+    changeActive(saleAttrValue, arr) {
+      // 遍历全部售卖属性值isChanged为零没有高亮了
+      arr.forEach((item) => {
+        item.isChecked = "0";
+      });
+      // 点击的那个售卖属性值
+      saleAttrValue.isChecked = 1;
+    },
+    // 表单元素修改加入购物车的商品个数
+    changeSkuNum(event) {
+      // 用户输入进来的文本—*1
+      let value = event.target.value * 1;
+      //如果用户输入的是非法的，通过一下判断
+      if (isNaN(value) || value < 1) {
+        this.skuNum = 1;
+      } else {
+        // 正常的
+        this.skuNum = parseInt(value);
+      }
+    },
+    // 加入购物车的函数
+    addShopcar() {
+      // 1：派发action  发请求将产品添加到数据库
+      this.$store.dispatch('addOrUpdataShopCart',{skuId:this.$route.params.skuid,skuNum:this.skuNum})
+      // 2：服务器存储成功--进行路由跳转
+      //3:失败,给用户进行提示
+    },
+  },
   computed: {
     ...mapGetters(["categoryView", "skuInfo", "spuSaleAttrList"]),
-    skuImageList(){
-      return this.skuInfo.skuImageList||{}
-    }
+    skuImageList() {
+      return this.skuInfo.skuImageList || {};
+    },
   },
   mounted() {
     // 派发action获取产品详情信息

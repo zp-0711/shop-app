@@ -34,7 +34,13 @@ export const reqGetSearchInfo = (params) => requests({
     data: params,
 })
 
-export const reqGoodsInfo = (skuId) =>requests({
+export const reqGoodsInfo = (skuId) => requests({
     url: `/api/item/${skuId}`,
     method: 'get',
 })
+
+// 将产品添加到购物车中（获取更新某一个产品的个数）
+export const reqAddOrUpdataShopCart = (skuId, skuNum) => requests({
+    url: `/api/cart/addToCart/${ skuId }/${ skuNum }`,
+    method: 'post'
+}, )
