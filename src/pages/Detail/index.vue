@@ -22,7 +22,7 @@
         <!-- 左侧放大镜区域 -->
         <div class="previewWrap">
           <!--放大镜效果-->
-          <Zoom />
+          <Zoom :skuImageList="skuImageList"/>
           <!-- 小图列表 -->
           <ImageList />
         </div>
@@ -363,6 +363,9 @@ export default {
   },
   computed: {
     ...mapGetters(["categoryView", "skuInfo", "spuSaleAttrList"]),
+    skuImageList(){
+      return this.skuInfo.skuImageList||{}
+    }
   },
   mounted() {
     // 派发action获取产品详情信息

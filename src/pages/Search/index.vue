@@ -82,7 +82,8 @@
                 <div class="list-wrap">
                   <div class="p-img">
                     <!--  -->
-                    <router-link :to="`/detail/${good.id}`"><img :src="good.defaultImg"
+                    <router-link :to="`/detail/${good.id}`"
+                      ><img :src="good.defaultImg"
                     /></router-link>
                   </div>
                   <div class="price">
@@ -118,7 +119,13 @@
             </ul>
           </div>
           <!-- 分页器 -->
-          <Pagination :pageNo="searchParams.pageNo" :pageSize="searchParams.pageSize" :total="total" :continues="5" @getPageNo="getPageNo" />
+          <Pagination
+            :pageNo="searchParams.pageNo"
+            :pageSize="searchParams.pageSize"
+            :total="total"
+            :continues="5"
+            @getPageNo="getPageNo"
+          />
         </div>
       </div>
     </div>
@@ -172,7 +179,7 @@ export default {
   computed: {
     ...mapState({
       // goodList:state=>state.search
-      total:state=>state.search.searchList.total,
+      total: (state) => state.search.searchList.total,
     }),
     //
     ...mapGetters(["goodsList"]),
@@ -276,12 +283,12 @@ export default {
       // 再次发送请求
       this.getData();
     },
-    getPageNo(pageNo){
+    getPageNo(pageNo) {
       // console.log(pageNo);
       this.searchParams.pageNo = pageNo;
       // 再次发请求
       this.getData();
-    }
+    },
   },
 
   // watch是监听数据：监听组件实例身上的属性的属性值的变化
