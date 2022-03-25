@@ -31,10 +31,15 @@ const actions = {
         skuNum
     }) {
         let result = await reqAddOrUpdataShopCart(skuId, skuNum);
-        console.log(result)
-        // if (result.code == 200) {
-        //     commit('ADDORUPDATASHOPCART', result.data);
-        // }
+        // console.log(result)
+        // 如果code==200代表服务器加入数据成功
+        // 当前的这个函数如果执行返回的是Promise【要么成功、要么失败】
+        if (result.code == 200) {
+            return "ok"
+        }else{
+            // 加入购物车失败
+            return Promise.reject(new Error('faile'))
+        }
     }
 }
 // getters是为了简化数据而生

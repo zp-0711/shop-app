@@ -28,7 +28,6 @@ export default {
     };
   },
   props: ["skuImageList"],
-  mounted() {},
   methods: {
     changeCurrentIndex(index) {
       //点击谁修改谁

@@ -399,10 +399,27 @@ export default {
       }
     },
     // 加入购物车的函数
-    addShopcar() {
+    async addShopcar() {
       // 1：派发action  发请求将产品添加到数据库
-      this.$store.dispatch('addOrUpdataShopCart',{skuId:this.$route.params.skuid,skuNum:this.skuNum})
-      // 2：服务器存储成功--进行路由跳转
+      /* 当前这里是派发一个action，也向服务器发请求判断加入购物车的是成功还是失败了*/
+      try {
+        // 成功
+        await this.$store.dispatch("addOrUpdataShopCart", {
+        skuId: this.$route.params.skuid,
+        skuNum: this.skuNum,
+      });
+      /*路由跳转
+      在路由跳转的时候还需要将产品的信息带给下一级的路由组件
+      一些简单的数据skuName，可以通过query形式传递给路由组件，但是
+      产品信息的数据【比较复杂：skuInfo】，通过会话存储（不持久化，会话结束数据再消失）
+      */
+
+     sessionStorage.setItem("SKUINFO",JSON.stringify(this.skuInfo))
+      this.$router.push({name:'addcartsucess',query:{skuNum:this.skuNum}})
+      }catch(error){
+        alert(error.message)
+      }
+      // 2：你需要知道这次请求成功还是失败，如果成功进行路由跳转，如果失败，需要给用户提示
       //3:失败,给用户进行提示
     },
   },
@@ -425,7 +442,6 @@ export default {
   .con {
     width: 1200px;
     margin: 15px auto 0;
-
     .conPoin {
       padding: 9px 15px 9px 0;
 
