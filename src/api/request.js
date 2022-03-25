@@ -20,7 +20,7 @@ export const requests = axios.create({
 requests.interceptors.request.use((config) => {
     //config:配置对象，对象里面有一个属性很重要，headers请求头
     // 进度条开始动
-    console.log(store)
+    // console.log(store)
     if (store.state.detail.uuid_token) {
         // 给请求头添加一个字段(userTempId)：和后台商量好
         config.headers.userTempId = store.state.detail.uuid_token;
