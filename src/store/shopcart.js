@@ -11,7 +11,7 @@ const actions = {
         commit
     }) {
        let result =  await  reqCartList()
-       console.log(result)
+    //    console.log(result)
     }
    
 }

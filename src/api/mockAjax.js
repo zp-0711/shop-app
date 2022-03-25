@@ -5,7 +5,8 @@ import nprogress from 'nprogress';
 //start:进度条开始  done：进度条结束
 // 引入进度条的样式
 import "nprogress/nprogress.css"
-
+import store from '@/store';
+import { Store } from 'vuex';
 
 //1：利用axios对象的方法create，去创建一个axios实例
 //2:request就是axios,只不过稍微配置一下

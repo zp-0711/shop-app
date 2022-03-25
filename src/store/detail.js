@@ -1,9 +1,14 @@
 import {
     reqGoodsInfo,
     reqAddOrUpdataShopCart
-} from "@/api"
+} from "@/api";
+// 封装游客身份模块uuid --生成唯一识别码
+import {
+    getUUID
+} from '@/utils/uuid_token';
 const state = {
-    goodInfo: {}
+    goodInfo: {},
+    uuid_token: getUUID(),
 }
 const mutations = {
     GETGOODINFO(state, goodInfo) {
@@ -36,7 +41,7 @@ const actions = {
         // 当前的这个函数如果执行返回的是Promise【要么成功、要么失败】
         if (result.code == 200) {
             return "ok"
-        }else{
+        } else {
             // 加入购物车失败
             return Promise.reject(new Error('faile'))
         }
