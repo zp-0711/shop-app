@@ -21,6 +21,7 @@
               type="checkbox"
               name="chk_list"
               :checked="cart.isChecked == 1"
+              @change="updataChecked(cart, $event)"
             />
           </li>
           <li class="cart-list-con2">
@@ -33,22 +34,32 @@
             <span class="price">{{ cart.skuPrice }}.00</span>
           </li>
           <li class="cart-list-con5">
-            <a href="javascript:void(0)" class="mins" @click="handler('mins',-1,cart)">-</a>
+            <a
+              href="javascript:void(0)"
+              class="mins"
+              @click="handler('minus', -1, cart)"
+              >-</a
+            >
             <input
               autocomplete="off"
               type="text"
               minnum="1"
               class="itxt"
               :value="cart.skuNum"
-              @change="handler('change',$event.target.value*1,cart)"
+              @change="handler('change', $event.target.value * 1, cart)"
             />
-            <a href="javascript:void(0)" class="plus"  @click="handler('add',1,cart)">+</a>
+            <a
+              href="javascript:void(0)"
+              class="plus"
+              @click="handler('add', 1, cart)"
+              >+</a
+            >
           </li>
           <li class="cart-list-con6">
             <span class="sum">{{ cart.skuNum * cart.skuPrice }}.00</span>
           </li>
           <li class="cart-list-con7">
-            <a href="#none" class="sindelet">删除</a>
+            <a class="sindelet" @click="dedeleCartById(cart)">删除</a>
             <br />
             <a href="#none">移到收藏</a>
           </li>
@@ -61,7 +72,7 @@
         <span>全选</span>
       </div>
       <div class="option">
-        <a href="#none">删除选中的商品</a>
+        <a @click="deleteAllCheckedCart">删除选中的商品</a>
         <a href="#none">移到我的关注</a>
         <a href="#none">清除下柜商品</a>
       </div>
@@ -80,6 +91,8 @@
 </template>
 
 <script>
+// 这种引入：是吧lodash全部功能函数引入
+import throttle from "lodash/throttle";
 import { mapGetters } from "vuex";
 export default {
   name: "ShopCart",
@@ -92,12 +105,75 @@ export default {
       this.$store.dispatch("getCartList");
     },
     // 修改某一个产品的个数
-   handler(type,disNum,cart){
-    //  type：是为了区分这三个元素
-    // disNum形参：+变化量（1）  -变化量（-1）  input最终的个数（并不是变化量）
-    // cart:哪一个产品【身上有ID】
-     console.log('chufa',type,disNum,cart)
-   }
+    handler: throttle(async function (type, disNum, cart) {
+      //  type：是为了区分这三个元素
+      // disNum形参：+变化量（1）  -变化量（-1）  input最终的个数（并不是变化量）
+      // cart:哪一个产品【身上有ID】
+      //  console.log('chufa',type,disNum,cart)
+      // 向服务器发送请求，修改数量
+      switch (type) {
+        // 加号
+        case "add":
+          disNum = 1;
+          break;
+        case "minus":
+          // 判断产品的个数大于1，才可以传递给服务器-1
+          // 产品的个数小于等于1
+          disNum = cart.skuNum > 1 ? -1 : 0;
+          break;
+        case "change":
+          // 用户输入的最终量是非法的
+          // disNum = isNaN(disNum)||disNum<1?0:parseInt(disNum) - cart.skuNum;
+          if (isNaN(disNum) || disNum < 1) {
+            disNum = 0;
+          } else {
+            // 属于正常情况（小数：取整），带给服务器的量  用户输入进来的  -产品的起始个数
+            disNum = parseInt(disNum) - cart.skuNum;
+          }
+          break;
+      }
+      // 派发action
+      try {
+        // 代表修改成功
+        this.$store.dispatch("addOrUpdataShopCart", {
+          skuId: cart.skuId,
+          skuNum: disNum,
+        });
+        this.getData();
+      } catch (error) {}
+    }),
+    dedeleCartById: throttle(async function (cart) {
+      try {
+        this.$store.dispatch("deleteCartListBySkuId", cart.skuId);
+        this.getData();
+      } catch (error) {
+        alert(error.message);
+      }
+    }, 50),
+    updataChecked(cart, event) {
+      try {
+        let isChecked = event.target.checked ? "1" : "0";
+        this.$store.dispatch("updataCheckById", {
+          skuId: cart.skuId,
+          isChecked,
+        });
+        this.getData();
+      } catch {
+        //  如果失败提示
+        alert(error.message);
+      }
+    },
+    // 删除全部选中的产品
+    // 这个回调函数没办法收集到有用的数据
+    async deleteAllCheckedCart() {
+      try {
+        await this.$store.dispatch("deleteAllCheckedCart");
+        //  在发请求获取购物车列表
+        this.getData();
+      } catch (error) {
+        alert(error.message);
+      }
+    },
   },
   computed: {
     ...mapGetters(["cartList"]),

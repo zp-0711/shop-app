@@ -50,3 +50,16 @@ export const reqCartList = () => requests({
     url: '/api/cart/cartList',
     method: 'get'
 }, )
+
+// 删除购物车的接口
+export const reqDeleteCartById = (skuId)=>requests({
+    url:`/api/cart/deleteCart/${skuId}`,
+    method:'DELETE'
+})
+
+// 修改购物车状态
+// /api/cart/checkCart/{skuId}/{isChecked}
+export const reqUpdataCheckById = (skuId,isChecked)=>requests({
+    url:`/api/cart/checkCart/${skuId}/${isChecked}`,
+    method:'get'
+})
