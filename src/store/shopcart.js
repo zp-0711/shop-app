@@ -54,13 +54,31 @@ const actions = {
     }) {
         //    context:小仓库，commit【提交mutation修改state】 getters【计算属性】 dispatch【派发action】 state【当前仓库数据】
         let promiseAll = [];
-        getters.cartList.cartInfoList.forEach(item => {
-           let promise =  item.isChecked == 1 ? dispatch('deleteCartListBySkuId', item.skuId) : '';
-           promiseAll.push(promise);
+        getters.cartList.cartInfoList.forEach(element => {
+            let promise = element.isChecked == 1 ? dispatch('deleteCartListBySkuId', element.skuId) : '';
+            promiseAll.push(promise);
         });
         // 只要全部的p1|p2.。。都成功，返回的结构即为成功
         // 如果有一个失败，返回即为失败的结果
         return Promise.all(promiseAll)
+    },
+    // 修改全部产品的状态
+    updataAllCartChecked({
+        dispatch,
+        getters
+    }, isChecked) {
+        // console.log(dispatch)
+        // console.log(isChecked)
+        let promiseAll = [];
+       getters.cartList.cartInfoList.forEach((item) => {
+           let p =  dispatch('updataCheckById', {
+                skuId: item.skuId,
+                isChecked
+            });
+            promiseAll.push(p);
+        });
+        // 最终返回结果
+        return Promise.all(promiseAll);
     }
 }
 const getters = {

@@ -132,7 +132,6 @@
         </div>
       </div>
     </section>
-
     <!-- 内容详情页 -->
     <section class="product-detail">
       <aside class="aside">
@@ -405,21 +404,23 @@ export default {
       try {
         // 成功
         await this.$store.dispatch("addOrUpdataShopCart", {
-        skuId: this.$route.params.skuid,
-        skuNum: this.skuNum,
-      });
-      /*路由跳转
+          skuId: this.$route.params.skuid,
+          skuNum: this.skuNum,
+        });
+        /*路由跳转
       在路由跳转的时候还需要将产品的信息带给下一级的路由组件
       一些简单的数据skuName，可以通过query形式传递给路由组件，但是
       产品信息的数据【比较复杂：skuInfo】，通过会话存储（不持久化，会话结束数据再消失）
       */
-
-     sessionStorage.setItem("SKUINFO",JSON.stringify(this.skuInfo))
-      this.$router.push({name:'addcartsucess',query:{skuNum:this.skuNum}})
-      }catch(error){
-        alert(error.message)
+        sessionStorage.setItem("SKUINFO", JSON.stringify(this.skuInfo));
+        this.$router.push({
+          name: "addcartsucess",
+          query: { skuNum: this.skuNum },
+        });
+      } catch (error) {
+        alert(error.message);
       }
-      // 2：你需要知道这次请求成功还是失败，如果成功进行路由跳转，如果失败，需要给用户提示
+      //2：你需要知道这次请求成功还是失败，如果成功进行路由跳转，如果失败，需要给用户提示
       //3:失败,给用户进行提示
     },
   },
