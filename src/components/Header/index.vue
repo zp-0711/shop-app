@@ -6,13 +6,17 @@
       <div class="container">
         <div class="loginList">
           <p>尚品汇欢迎您！</p>
-          <p>
+          <p v-if="!userName">
             <span>请</span>
             <!-- 声明式导航：务必要用to属性 -->
             <router-link to="/login">登录</router-link>
             <!-- <a href="###">登录</a> -->
             <router-link class="register" to="register">免费注册</router-link>
             <!-- <a href="###" class="register">免费注册</a> -->
+          </p>
+          <p v-else>
+            <a>{{ userName }}</a>
+            <a class="register" @click="logout">退出登录</a>
           </p>
         </div>
         <div class="typeList">
@@ -87,18 +91,38 @@ export default {
       // 面试题4：路由组件能不能传递props数据？
       //可以的：三种写法
       // 代表的是如果有query参数也带过去
-       if(this.$route.query){
-         let location = {name:'search',params:{keyword:this.keyword||undefined}};
-         location.query = this.$route.query;
-         this.$router.push(location)
-       }
+      if (this.$route.query) {
+        let location = {
+          name: "search",
+          params: { keyword: this.keyword || undefined },
+        };
+        location.query = this.$route.query;
+        this.$router.push(location);
+      }
+    },
+    // 退出登录
+    // 1:需要发请求：通知服务器退出登录{清除一些数据：token}
+    // 2：通知浏览器清除一些本地存储
+    async logout() {
+      try {
+        await this.$store.dispatch("userLogout");
+        // 回到首页
+        this.$router.push("/home");
+      } catch (error) {
+        error.message;
+      }
     },
   },
-  mounted(){
-    this.$bus.$on("clea",()=>{
+  mounted() {
+    this.$bus.$on("clea", () => {
       this.keyword = "";
-    })
-  }
+    });
+  },
+  computed: {
+    userName() {
+      return this.$store.state.user.userInfo.name;
+    },
+  },
 };
 </script>
 
