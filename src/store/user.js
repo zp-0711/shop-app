@@ -75,15 +75,17 @@ const actions = {
             return Promise.reject(new Error("faile"))
         }
     },
+    // 获取用户信息
     async getUserInfo({
         commit
     }) {
         let result = await reqUserInfo();
         // console.log(result)
         if (result.code == 200) {
-
             commit("GETUSERINFO", result.data)
             return 'ok'
+        }else{
+            // return Promise.reject(new Error('faile'))
         }
     },
     // 退出登录
@@ -95,7 +97,7 @@ const actions = {
         if (result.code == 200) {
             commit('CLEAR');
             return 'ok'
-        }else{
+        } else {
             return Promise.reject(new Error('faile'))
         }
     }
