@@ -16,13 +16,17 @@ import store from './store';
 import '@/mock/mockServe';
 // 引入Swiper样式
 import "swiper/css/swiper.css";
+// 统一接收API文件夹里面全部请求函数
+// 统一引入
+import * as API from '@/api'
 new Vue({
   render: h => h(App),
   beforeCreate(){
     Vue.prototype.$bus= this;
+    Vue.prototype.$API = API;
   },
   //注册路由：底下的写法
-  //注册路由信息：当这里书写router的时候，组件身上都拥有$router，$router属性
+  //注册路由信息：当这里书写router的时候，组件身上都拥有$router，$route属性
   router,
   //注册仓库：组件实例vc的身上会多一个$store属性
   store,
