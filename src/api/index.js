@@ -117,3 +117,10 @@ export const reqSubmitOrder = (tradeNo,data) => requests({
     data,
     method:'post'
 })
+
+// 获取订单支付信息
+// /api/payment/weixin/createNative/{orderId}
+export const reqPayInfo = (orderId)=>requests({
+    url:`/api/payment/weixin/createNative/${orderId}`,
+    method:'get'
+})

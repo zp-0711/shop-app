@@ -8,8 +8,12 @@
 2.3从今天开始项目就不使用Vuex了
 
 3）获取只读信息（不再使用Vuex）
-
+3.1别再生命周期函数前面加ASYNC
+3.2获取支付信息
 4）elementUI使用+按需引入
+4.1已经学习过得组件库：
+react：antd [PC]  antd-mobile[移动端]
+Vue：Element[PC]  vant[移动端的]
 
 5）二维码生成 Qrcode
 
