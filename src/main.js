@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App.vue'
+
 //引入路由
 import router from '@/router';
 //三级联动组件---全局组件
@@ -8,6 +9,9 @@ import TypeNav from '@/components/TypeNav';
 import Carsousel from '@/components/Carousel';
 import Pagination from '@/components/Pagination';
 
+// 引入element-UI
+import { Button,MessageBox} from 'element-ui';
+Vue.component(Button.name, Button);
 Vue.component(TypeNav.name, TypeNav)
 Vue.component(Carsousel.name, Carsousel)
 Vue.component(Pagination.name,Pagination)
@@ -19,6 +23,9 @@ import "swiper/css/swiper.css";
 // 统一接收API文件夹里面全部请求函数
 // 统一引入
 import * as API from '@/api'
+// element-ui注册组件的时候，还有一种写反思，挂载原型上面
+Vue.prototype.$msgbox = MessageBox;
+Vue.prototype.$alert = MessageBox.alert;
 new Vue({
   render: h => h(App),
   beforeCreate(){

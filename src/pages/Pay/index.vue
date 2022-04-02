@@ -1,5 +1,6 @@
 <template>
   <div class="pay-main">
+    <el-button type="success" class="el-icon-plus">按钮</el-button>
     <div class="pay-container">
       <div class="checkout-tit">
         <h4 class="tit-txt">
@@ -77,7 +78,7 @@
 
         <div class="submit">
           <!-- <router-link class="btn" to="/paysuccess">立即支付</router-link> -->
-          <a class="btn">立即支付</a>
+          <a class="btn" @click="open">立即支付</a>
         </div>
         <div class="otherpay">
           <div class="step-tit">
@@ -119,6 +120,19 @@ export default {
         this.payInfo = result.data;
       }
     },
+    // 弹出框
+     open() {
+        this.$alert('<strong>这是 <i>HTML</i> 片段</strong>', 'HTML 片段', {
+          dangerouslyUseHTMLString: true,
+          // 中间布局
+          center:true,
+          // 显示取消按钮
+          showCancelButton:true,
+          cancelButtonText:'支付遇见问题',
+          confirmButtonText:'已支付成功',
+          showClose:true
+        });
+      }
   },
 };
 </script>
