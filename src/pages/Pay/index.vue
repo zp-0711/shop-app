@@ -18,7 +18,7 @@
           >
           <span class="fr"
             ><em class="lead">应付金额：</em
-            ><em class="orange money">￥{{payInfo.totalFee}}.00</em></span
+            ><em class="orange money">￥{{ payInfo.totalFee }}.00</em></span
           >
         </div>
       </div>
@@ -95,11 +95,15 @@
 </template>
 
 <script>
+import QRCode from "qrcode";
 export default {
   name: "Pay",
   data() {
     return {
       payInfo: {},
+      timer: null,
+      // 支付的状态码
+      code: "",
     };
   },
   computed: {
@@ -121,18 +125,64 @@ export default {
       }
     },
     // 弹出框
-     open() {
-        this.$alert('<strong>这是 <i>HTML</i> 片段</strong>', 'HTML 片段', {
-          dangerouslyUseHTMLString: true,
-          // 中间布局
-          center:true,
-          // 显示取消按钮
-          showCancelButton:true,
-          cancelButtonText:'支付遇见问题',
-          confirmButtonText:'已支付成功',
-          showClose:true
-        });
+    async open() {
+      //  生成二维码 地址
+      let url = await QRCode.toDataURL(this.payInfo.codeUrl);
+      // console.log(result)
+      this.$alert(`<img src=${url}/>`, "请你微信支付", {
+        dangerouslyUseHTMLString: true,
+        // 中间布局
+        center: true,
+        // 显示取消按钮
+        showCancelButton: true,
+        cancelButtonText: "支付遇见问题",
+        confirmButtonText: "已支付成功",
+        // 右上角的叉子没了
+        showClose: true,
+        // 关闭弹出的配置值
+        beforeClose: (type, instance, done) => {
+          // type:区分取消|确定按钮
+          // instance:当前组件的实例
+          // done:关闭弹出框的方法
+          if (type == "cancel") {
+            alert("请联系管理员豪哥");
+            // 清除定时器
+            clearInterval(this.timer);
+            this.timer = null;
+            // 关闭弹出窗
+            done();
+          } else {
+            // 判断是否真的支付了
+            if (this.code == 200) {
+              clearInterval(this.timer);
+              this.timer = null;
+              done();
+              this.$router.push("/paysuccess");
+            }
+          }
+        },
+      });
+      // 你需要知道支付成功|失败
+      // 支付成功，路由的跳转。如果支付失败，提示信息
+      // 长轮询（定时器）  定时器没有需要开始一个定时器
+      if (!this.timer) {
+        this.timer = setTimeout(async () => {
+          // 发请求获取用户支付的状态
+          let result = await this.$API.reqPayStatus(this.orderId);
+          // console.log(result);
+          if (result.code == 200) {
+            clearInterval(this.timer);
+            this.timer = null;
+            // 还有支付成功的Code
+            this.code = result.code;
+            // 关闭弹出框
+            this.$msgbox.close();
+            // 然后跳转到下一个支付成功路由
+            this.$router.push("/paysuccess");
+          }
+        }, 1000);
       }
+    },
   },
 };
 </script>
