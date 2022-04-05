@@ -82,8 +82,16 @@ router.beforeEach(async (to, from, next) => {
             }
         }
     } else {
-        //
-        next()
+        //未登录：不能去交易相关、不能去支付相关的【pay、paysuccess、】等页面
+        // 未登录跳转到登录页面再进行下一步操作
+        // 去的不是上面的这些路由可以放行
+        let toPath = to.path;
+        if (toPath.indexOf('/trade') != -1 || toPath.indexOf('/pay') != -1 || toPath.indexOf('/center') != -1 || toPath.indexOf('/shopcart') != -1) {
+            // 把未登录的时候想去而没有成功去的页面，通过query过去然后解析
+            next('/login?redirect='+toPath)
+        } else {
+            next()
+        }
     }
 
 })

@@ -10,19 +10,37 @@ import Trade from '@/pages/Trade'
 import Pay from '@/pages/Pay'
 import PaySuccess from '@/pages/PaySuccess'
 import Center from '@/pages/Center'
+import MyOrder from '@/pages/Center/myOrder'
+import GroupOrder from '@/pages/Center/groupOrder'
 // 路由的配置信息
 export default [
+
     {
         path: "/center",
-        name:'center',
+        name: 'center',
         component: Center,
         meta: {
             show: true
         },
+        children: [{
+                path: 'myOrder',
+                name: 'myOrder',
+                component: MyOrder,
+            },
+            {
+                path: 'groupOrder',
+                name: 'groupOrder',
+                component: GroupOrder,
+            },
+            {
+                path: '/center',
+                redirect: '/center/myOrder'
+            }
+        ]
     },
     {
         path: "/paysuccess",
-        name:'paysuccess',
+        name: 'paysuccess',
         component: PaySuccess,
         meta: {
             show: true
@@ -30,23 +48,39 @@ export default [
     },
     {
         path: "/pay",
-        name:'pay',
+        name: 'pay',
         component: Pay,
         meta: {
             show: true
         },
+        beforeEnter:(to,from,next)=>{
+            if(from.path == "/trade"){
+                next();
+            }else{
+                next(false)
+            }
+        }
     },
     {
         path: "/trade",
-        name:'trade',
+        name: 'trade',
         component: Trade,
         meta: {
             show: true
         },
+        beforeEnter: (to, from, next) => {
+            // 去交易页面，必须是从购物车而来
+            if (from.path == "/shopcart") {
+                next()
+            } else {
+                // 其他的路由组件而来必须停留在现在
+                next(false)
+            }
+        }
     },
     {
         path: "/shopcart",
-        name:'shopcart',
+        name: 'shopcart',
         component: ShopCart,
         meta: {
             show: true
@@ -54,7 +88,7 @@ export default [
     },
     {
         path: "/addcartsucess",
-        name:'addcartsucess',
+        name: 'addcartsucess',
         component: AddCartSuccess,
         meta: {
             show: true

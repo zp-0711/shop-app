@@ -7,8 +7,7 @@
     <!-- 中间部分 -->
 
     <button
-      v-for="(page, index) in startNumAndEndNum.end"
-      :key="index"
+      v-for="(page, index) in startNumAndEndNum.end" :key="index"
       v-if="page >= startNumAndEndNum.start"
       @click="$emit('getPageNo',page)"
       :class="{active:pageNo==page}"
