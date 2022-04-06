@@ -10,11 +10,15 @@ import Carsousel from '@/components/Carousel';
 import Pagination from '@/components/Pagination';
 
 // 引入element-UI
-import { Button,MessageBox} from 'element-ui';
+import {
+  Button,
+  Loading,
+  MessageBox
+} from 'element-ui';
 Vue.component(Button.name, Button);
 Vue.component(TypeNav.name, TypeNav)
 Vue.component(Carsousel.name, Carsousel)
-Vue.component(Pagination.name,Pagination)
+Vue.component(Pagination.name, Pagination)
 Vue.config.productionTip = false;
 import store from './store';
 import '@/mock/mockServe';
@@ -26,10 +30,30 @@ import * as API from '@/api'
 // element-ui注册组件的时候，还有一种写反思，挂载原型上面
 Vue.prototype.$msgbox = MessageBox;
 Vue.prototype.$alert = MessageBox.alert;
+
+// 引入图片
+import loadingImg from '@/assets/1.gif';
+
+//引入插件
+import VueLazyload from 'vue-lazyload';
+// 注册插件
+Vue.use(VueLazyload,
+  //懒加载默认的图片
+  {
+    Loading: loadingImg
+  }
+)
+
+// 引入自定义插件
+import myPlugins from './plugins/myPlugins';
+Vue.use(myPlugins,{
+  name:'upper'
+})
+
 new Vue({
   render: h => h(App),
-  beforeCreate(){
-    Vue.prototype.$bus= this;
+  beforeCreate() {
+    Vue.prototype.$bus = this;
     Vue.prototype.$API = API;
   },
   //注册路由：底下的写法
