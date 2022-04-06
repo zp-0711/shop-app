@@ -50,6 +50,8 @@ Vue.use(myPlugins,{
   name:'upper'
 })
 
+// 引入校验插件
+import "@/plugins/validate"
 new Vue({
   render: h => h(App),
   beforeCreate() {

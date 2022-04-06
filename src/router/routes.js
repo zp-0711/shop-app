@@ -9,28 +9,34 @@ import ShopCart from '@/pages/ShopCart'
 import Trade from '@/pages/Trade'
 import Pay from '@/pages/Pay'
 import PaySuccess from '@/pages/PaySuccess'
-import Center from '@/pages/Center'
+// import Center from '@/pages/Center'
 import MyOrder from '@/pages/Center/myOrder'
 import GroupOrder from '@/pages/Center/groupOrder'
+// 当打包构建应用时，JavaScript 包会变得非常大，影响页面加载。
+// 如果我们能把不同路由对应的组件分割成不同的代码块，
+// 然后当路由被访问的时候才加载对应组件，这样就会更加高效
+
+
+
 // 路由的配置信息
 export default [
 
     {
         path: "/center",
         name: 'center',
-        component: Center,
+        component: () => import('@/pages/Center'),
         meta: {
             show: true
         },
         children: [{
                 path: 'myOrder',
                 name: 'myOrder',
-                component: MyOrder,
+                component: () => import('@/pages/Center/myOrder'),
             },
             {
                 path: 'groupOrder',
                 name: 'groupOrder',
-                component: GroupOrder,
+                component: () => import('@/pages/Center/groupOrder'),
             },
             {
                 path: '/center',
@@ -41,7 +47,7 @@ export default [
     {
         path: "/paysuccess",
         name: 'paysuccess',
-        component: PaySuccess,
+        component: () => import('@/pages/PaySuccess'),
         meta: {
             show: true
         },
@@ -49,14 +55,14 @@ export default [
     {
         path: "/pay",
         name: 'pay',
-        component: Pay,
+        component: () => import('@/pages/Pay'),
         meta: {
             show: true
         },
-        beforeEnter:(to,from,next)=>{
-            if(from.path == "/trade"){
+        beforeEnter: (to, from, next) => {
+            if (from.path == "/trade") {
                 next();
-            }else{
+            } else {
                 next(false)
             }
         }
@@ -64,7 +70,7 @@ export default [
     {
         path: "/trade",
         name: 'trade',
-        component: Trade,
+        component: () => import('@/pages/Trade'),
         meta: {
             show: true
         },
@@ -81,7 +87,7 @@ export default [
     {
         path: "/shopcart",
         name: 'shopcart',
-        component: ShopCart,
+        component: () => import('@/pages/ShopCart'),
         meta: {
             show: true
         },
@@ -89,38 +95,38 @@ export default [
     {
         path: "/addcartsucess",
         name: 'addcartsucess',
-        component: AddCartSuccess,
+        component: () => import('@/pages/AddCartSuccess'),
         meta: {
             show: true
         },
     },
     {
         path: "/detail/:skuid",
-        component: Detail,
+        component:() => import('@/pages/Detail'), 
         meta: {
             show: true
         },
     },
     {
         path: "/home",
-        component: Home,
+        component: () => import('@/pages/Home'),
         meta: {
             show: true
         }
     },
     {
         path: "/login",
-        component: Login
+        component: () => import('@/pages/Login')
     },
     {
         path: "/register",
-        component: Register
+        component: () => import('@/pages/Register')
 
     },
     {
         name: "search",
         path: "/search/:keyword?",
-        component: Search,
+        component: () => import('@/pages/Search'),
         meta: {
             show: true
         },
