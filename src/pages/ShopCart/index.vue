@@ -23,6 +23,8 @@
               :checked="cart.isChecked == 1"
               @change="updataChecked(cart, $event)"
             />
+
+            
           </li>
           <li class="cart-list-con2">
             <img :src="cart.imgUrl" />
